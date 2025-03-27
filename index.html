@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Döv Beni</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: url('background.png') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: url('glove.png'), auto;
+        }
+        .character {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 40%; /* Burayı istediğin konuma göre ayarla */
+        }
+        .suit {
+            width: 100%;
+        }
+        .face {
+            position: absolute;
+            transform: translateX(-50%);
+            width: 250px;
+            transition: 0.1s;
+        }
+        #cursor {
+            position: absolute;
+            width: 256px;
+            height: 256px;
+            background: url('glove.png') no-repeat center/contain;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .speech-bubble {
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transform: translateX(-50%);
+            background-size: cover;
+            width: 300px;
+            display: none; /* Başlangıçta gizli */
+            text-align: center;
+        }
+        .speech-bubble img {
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div class="speech-bubble" id="speechBubble"></div>
+    <div class="character">
+        <img src="face.png" class="face" id="face" alt="Face">
+    </div>
+
+    <audio id="punchSound" src="punch.mp3"></audio>
+    
+    <script>
+        let clickCount = 0;
+        let speechBubbles = [
+            "speech-bubble1.png", // Konuşma balonu 1
+            "speech-bubble2.png", // Konuşma balonu 2
+            "speech-bubble3.png", // Konuşma balonu 3
+            "speech-bubble4.png", // Konuşma balonu 4
+            "speech-bubble5.png"  // Konuşma balonu 5
+        ];
+
+        document.addEventListener("click", function() {
+            let face = document.getElementById("face");
+            let speechBubble = document.getElementById("speechBubble");
+            let sound = document.getElementById("punchSound");
+            
+            face.src = "face-punched.png";
+            sound.play();
+            
+            clickCount++;
+
+            // Konuşma balonunu rastgele seç ve göster
+            let randomBubble = speechBubbles[Math.floor(Math.random() * speechBubbles.length)];
+            speechBubble.style.display = "block";
+            speechBubble.innerHTML = `<img src="${randomBubble}" alt="Speech Bubble">`;
+
+            // Konuşma balonunu 2 saniye sonra gizle
+            setTimeout(() => {
+                speechBubble.style.display = "none";
+            }, 2000);
+
+            if (clickCount >= 10) {
+                clickCount = 0;
+                face.src = "face-dead.png";
+                setTimeout(() => {
+                    face.src = "face.png";
+                }, 2000);
+            } else {
+                setTimeout(() => {
+                    face.src = "face.png";
+                }, 400);
+            }
+        });
+
+        document.addEventListener("mousemove", function(e) {
+            let cursor = document.getElementById("cursor");
+            cursor.style.left = e.pageX + "px";
+            cursor.style.top = e.pageY + "px";
+        });
+
+    </script>
+</body>
+</html>
