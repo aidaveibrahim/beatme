@@ -83,7 +83,12 @@
             let sound = document.getElementById("punchSound");
             
             face.src = "face-punched.png";
-            sound.play();
+            if (!sound.paused) {
+                sound.currentTime = 0; // Sesin başına dön
+                sound.play();
+            } else {
+                sound.play();
+            }
             
             clickCount++;
 
@@ -95,7 +100,7 @@
             // Konuşma balonunu 2 saniye sonra gizle
             setTimeout(() => {
                 speechBubble.style.display = "none";
-            }, 2000);
+            }, 500);
 
             if (clickCount >= 10) {
                 clickCount = 0;
@@ -106,15 +111,18 @@
             } else {
                 setTimeout(() => {
                     face.src = "face.png";
-                }, 400);
+                }, 500);
             }
         });
-
         document.addEventListener("mousemove", function(e) {
-            let cursor = document.getElementById("cursor");
-            cursor.style.left = e.pageX + "px";
-            cursor.style.top = e.pageY + "px";
-        });
+    let cursor = document.getElementById("cursor");
+    let cursorSize = 256; // Eldivenin boyutu (px)
+    
+    // Farenin pozisyonu - eldivenin yarısı
+    cursor.style.left = e.pageX - cursorSize / 2 + "px";
+    cursor.style.top = e.pageY - cursorSize / 2 + "px";
+});
+
 
     </script>
 </body>
